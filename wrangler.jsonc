@@ -1,0 +1,13 @@
+{
+  // Cloudflare Worker settings. `npm run setup` fills in the KV namespace id.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "snailmcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": { "enabled": true },
+  "kv_namespaces": [
+    // Remembers the Message-ID of each email for 7 days, so a call never runs twice.
+    { "binding": "SEEN", "id": "SET_BY_SETUP" }
+  ]
+}
