@@ -89,6 +89,8 @@ Paste `local/agent-prompt.md` into your agent. It holds your address, your token
 
 ### 8. Test it
 
+If you have just turned on Email Routing, wait 30 minutes first. Mail servers such as Gmail remember that your domain had no mail records. Until they check again, they bounce your email with "the domain couldn't be found", and the email never reaches Cloudflare.
+
 Ask your agent to email your address with the subject `help`. To watch what the Worker does, run:
 
 ```bash
@@ -118,7 +120,7 @@ To get a new address and token, run `npm run setup -- --rotate`, then give your 
 
 These things work in local tests, but only real email can confirm them:
 
-- **The DMARC check.** The Worker reads the DMARC result from the topmost `Authentication-Results` header, which the receiving mail server adds. If `wrangler tail` shows every email rejected with "no Authentication-Results header", Cloudflare records the result somewhere else, and `src/checks.ts` needs to change.
+- **The DMARC check for your agent's domain.** The Worker reads the DMARC result from the topmost `Authentication-Results` header, which Cloudflare adds. This works for email from Gmail. If `wrangler tail` shows your agent's email rejected with a DMARC reason, its mail service may not pass DMARC.
 - **Where replies go.** Cloudflare sends replies to the envelope sender. Some mail services send from a separate bounce address. If your agent never sees replies, check `wrangler tail` for the address the reply went to.
 - **Your agent's sending rules.** Instinct asks you to approve emails it sends from your Gmail. If your agent can send from its own address, add that address to the allowed list so calls do not wait for you.
 
